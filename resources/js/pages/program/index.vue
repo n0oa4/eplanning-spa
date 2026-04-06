@@ -59,7 +59,7 @@ defineProps({
 
                         <button
                             v-if="program.status === 'draft'"
-                            @click="$inertia.post(`/program/${program.id}/verifikasi`)"
+                            @click="$inertia.post(route('program.verifikasi', program.id))"
                             class="bg-yellow-500 text-white px-3 py-1 rounded ml-2"
                         >
                             Verifikasi
@@ -67,7 +67,7 @@ defineProps({
 
                         <button
                             v-if="program.status === 'verifikasi'"
-                            @click="$inertia.post(`/program/${program.id}/kembalikan`)"
+                            @click="$inertia.post(route('program.kembalikan', program.id))"
                             class="px-3 py-1 bg-yellow-500 text-white rounded"
                         >
                             Kembalikan ke Draft
@@ -75,7 +75,7 @@ defineProps({
 
                         <button
                             v-if="program.status === 'verifikasi'"
-                            @click="$inertia.post(`/program/${program.id}/setujui`)"
+                            @click="$inertia.post(route('program.setujui', program.id))"
                             class="bg-green-600 text-white px-3 py-1 rounded ml-2"
                         >
                             Setujui
