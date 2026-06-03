@@ -30,11 +30,7 @@
 
         .bold { font-weight: bold; }
 
-        @media print {
-            body {
-                font-size: 10px;
-            }
-        }
+        
     </style>
 </head>
 <body>

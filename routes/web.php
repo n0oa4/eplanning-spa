@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use App\Http\Controllers\ProgramController;
-
-
+use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\SubActivityController;
 
 Route::inertia('/', 'Welcome', [
     'canRegister' => Features::enabled(Features::registration()),
@@ -15,62 +15,56 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+
+    // === PROGRAM ===
     Route::resource('program', ProgramController::class);
 
+    // === ACTIVITY ===
     Route::post('/program/{program}/activity',
-        [ProgramController::class, 'storeActivity']
-    )->name('program.activity.store');
+        [ActivityController::class, 'store'])
+        ->name('program.activity.store');
 
+    Route::put('/activity/{activity}',
+        [ActivityController::class, 'update'])
+        ->name('activity.update');
+
+    Route::delete('/activity/{activity}',
+        [ActivityController::class, 'destroy'])
+        ->name('activity.destroy');
+
+    // === SUB ACTIVITY ===
     Route::post('/activity/{activity}/sub',
-        [ProgramController::class, 'storeSubActivity']
-    )->name('activity.sub.store');
+        [SubActivityController::class, 'store'])
+        ->name('activity.sub.store');
 
-    Route::put(
-        '/program/{program}',
-        [ProgramController::class, 'update']
-    )->name('program.update');
+    Route::put('/sub/{subActivity}',
+        [SubActivityController::class, 'update'])
+        ->name('sub.update');
 
-    Route::delete(
-        '/program/{program}',
-        [ProgramController::class, 'destroy']
-    )->name('program.destroy');
+    Route::delete('/sub/{subActivity}',
+        [SubActivityController::class, 'destroy'])
+        ->name('sub.destroy');
 
-    Route::put(
-        '/activity/{activity}',
-        [ProgramController::class, 'updateActivity']
-    )->name('activity.update');
+    // === APPROVAL ===
+    Route::post('/program/{id}/verifikasi',
+        [ProgramController::class, 'verifikasi'])
+        ->name('program.verifikasi');
 
-    Route::delete(
-        '/activity/{activity}',
-        [ProgramController::class, 'destroyActivity']
-    )->name('activity.destroy');
+    Route::post('/program/{id}/setujui',
+        [ProgramController::class, 'setujui'])
+        ->name('program.setujui');
 
-    Route::put(
-        '/sub/{subActivity}',
-        [ProgramController::class, 'updateSubActivity']
-    )->name('sub.update');
+    Route::post('/program/{id}/kembalikan',
+        [ProgramController::class, 'kembalikan'])
+        ->name('program.kembalikan');
 
-    Route::delete(
-        '/sub/{subActivity}',
-        [ProgramController::class, 'destroySubActivity']
-    )->name('sub.destroy');
-
-    Route::post('/program/{id}/verifikasi', [ProgramController::class, 'verifikasi'])
-    ->name('program.verifikasi');
-
-    Route::post('/program/{id}/setujui', [ProgramController::class, 'setujui'])
-    ->name('program.setujui');
-
-    Route::post('/program/{id}/kembalikan', [ProgramController::class, 'kembalikan'])
-    ->name('program.kembalikan');
-
+    // === ARSIP & LAPORAN ===
     Route::get('/arsip', [App\Http\Controllers\ArsipController::class, 'index'])
-    ->name('arsip.index');
+        ->name('arsip.index');
 
     Route::get('/ranwal/print', [ProgramController::class, 'ranwal']);
 
     Route::get('/ranwal/export', [ProgramController::class, 'exportExcel']);
 });
-
 
 require __DIR__.'/settings.php';
