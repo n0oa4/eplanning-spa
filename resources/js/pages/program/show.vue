@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue'
 import { useForm } from '@inertiajs/vue3'
 import { Link } from '@inertiajs/vue3'
 import { ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 
 defineOptions({ layout: AppLayout })
 
@@ -106,6 +107,9 @@ const startEdit = (sub) => {
     editForm.prioritas_provinsi = sub.prioritas_provinsi || ''
     editForm.prioritas_kabupaten = sub.prioritas_kabupaten || ''
     editForm.bidang_urusan = sub.bidang_urusan || ''
+    editForm.prioritas_provinsi = sub.prioritas_provinsi || ''
+    editForm.prioritas_kabupaten = sub.prioritas_kabupaten || ''
+    editForm.bidang_urusan = sub.bidang_urusan || ''
 }
 
 const updateSub = () => {
@@ -128,6 +132,7 @@ const deleteSub = (id) => {
     }
 }
 
+// Auto hitung N+1 dan N+2
 watch(() => subForm.pagu_anggaran, (value) => {
     let pagu = parseFloat(value) || 0
     subForm.n1 = Math.round(pagu * 1.1)
@@ -182,10 +187,10 @@ watch(() => editForm.pagu_anggaran, (value) => {
 
     <p class="mb-4">Tahun: {{ program.tahun }}</p>
 
-    <div class="bg-green-700 p-3 text-white mb-4">
-        <strong>Total Pagu Program:</strong>
-        Rp. {{ program.total_pagu?.toLocaleString('id-ID') || 0 }}
-    </div>
+        <div class="bg-green-700 p-4 text-white mb-6 rounded">
+            <strong>Total Pagu Program:</strong>
+            Rp. {{ program.total_pagu?.toLocaleString('id-ID') || 0 }}
+        </div>
 
     <!-- TAMBAH KEGIATAN -->
     <h2 v-if="program.status === 'draft'" class="text-xl font-semibold mb-2">Tambah Kegiatan</h2>
