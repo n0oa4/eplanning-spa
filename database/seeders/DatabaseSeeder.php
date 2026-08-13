@@ -3,21 +3,54 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->call(RoleSeeder::class);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Admin
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@eplanning.com'],
+            [
+                'name' => 'Administrator',
+                'password' => Hash::make('password'),
+            ]
+        );
+        $admin->assignRole('admin');
+
+        // Kabid
+        $kabid = User::firstOrCreate(
+            ['email' => 'kabid@eplanning.com'],
+            [
+                'name' => 'Kepala Bidang',
+                'password' => Hash::make('password'),
+            ]
+        );
+        $kabid->assignRole('kabid');
+
+        // 6 Operator
+        $operators = [
+            ['name' => 'Operator 1', 'email' => 'operator1@eplanning.com'],
+            ['name' => 'Operator 2', 'email' => 'operator2@eplanning.com'],
+            ['name' => 'Operator 3', 'email' => 'operator3@eplanning.com'],
+            ['name' => 'Operator 4', 'email' => 'operator4@eplanning.com'],
+            ['name' => 'Operator 5', 'email' => 'operator5@eplanning.com'],
+            ['name' => 'Operator 6', 'email' => 'operator6@eplanning.com'],
+        ];
+
+        foreach ($operators as $data) {
+            $user = User::firstOrCreate(
+                ['email' => $data['email']],
+                [
+                    'name' => $data['name'],
+                    'password' => Hash::make('password'),
+                ]
+            );
+            $user->assignRole('operator');
+        }
     }
 }

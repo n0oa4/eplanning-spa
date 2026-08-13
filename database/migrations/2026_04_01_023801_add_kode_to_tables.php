@@ -12,15 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('programs', function (Blueprint $table) {
-            $table->string('kode_program')->nullable();
+            $table->string('kode_program')->unique();
         });
 
         Schema::table('activities', function (Blueprint $table) {
-            $table->string('kode_kegiatan')->nullable();
+            $table->string('kode_kegiatan');
         });
 
         Schema::table('sub_activities', function (Blueprint $table) {
-            $table->string('kode_sub_kegiatan')->nullable();
+            $table->string('kode_sub_kegiatan');
         });
     }
 
@@ -30,6 +30,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('programs', function (Blueprint $table) {
+            $table->dropUnique(['kode_program']);
             $table->dropColumn('kode_program');
         });
 

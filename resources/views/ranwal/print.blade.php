@@ -30,7 +30,24 @@
 
         .bold { font-weight: bold; }
 
-        
+        /* === Perbaikan tampilan saat print/save as PDF === */
+
+        /* Cegah satu baris tabel terpotong di tengah saat ganti halaman */
+        tr {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        /* Ulangi header tabel (Kode, Uraian, dst) di setiap halaman baru */
+        thead {
+            display: table-header-group;
+        }
+
+        /* Cegah baris terakhir tabel di suatu halaman "menggantung" sendirian
+           tanpa baris berikutnya yang biasanya menyertainya (misal Program tanpa Kegiatan-nya) */
+        tbody tr {
+            page-break-after: auto;
+        }
     </style>
 </head>
 <body>
@@ -40,7 +57,7 @@
         <div>RENCANA KERJA ORGANISASI PERANGKAT DAERAH (RENJA OPD)</div>
         <div>DINAS TANAMAN PANGAN, HORTIKULTURA DAN PERKEBUNAN</div>
         <div>KABUPATEN BANGGAI</div>
-        <div>TAHUN 2026</div>
+        <div>TAHUN {{ request('tahun') ?? date('Y') }}</div>
     </div>
 
 
@@ -70,18 +87,18 @@
 
             {{-- URUSAN --}}
             <tr>
-                <td></td>
+                <td class="bold">3</td>
                 <td class="bold">URUSAN PEMERINTAHAN PILIHAN</td>
                 <td colspan="9"></td>
             </tr>
 
             <tr>
-                <td></td>
+                <td class="bold">3.27</td>
                 <td class="bold">URUSAN PEMERINTAHAN BIDANG PERTANIAN</td>
                 <td colspan="9"></td>
             </tr>
 
-            @foreach($programs as $program)
+            @forelse($programs as $program)
 
             {{-- PROGRAM --}}
             <tr>
@@ -106,7 +123,7 @@
                         <td>{{ $sub->kode_sub_kegiatan }}</td>
                         <td>{{ $sub->nama_sub_kegiatan }}</td>
                         <td>{{ $sub->indikator }}</td>
-                        <td>{{ $sub->skpd }}</td>
+                        <td>Dinas Tanaman Pangan, Hortikultura dan Perkebunan</td>
                         <td>{{ $sub->prioritas_provinsi }}</td>
                         <td>{{ $sub->prioritas_kabupaten }}</td>
                         <td>{{ $sub->bidang_urusan }}</td>
@@ -126,7 +143,11 @@
 
             @endforeach
 
-        @endforeach
+            @empty
+                <tr>
+                    <td colspan="11" class="text-center">Tidak ada data program yang disetujui</td>
+                </tr>
+            @endforelse
 
         </tbody>
     </table>

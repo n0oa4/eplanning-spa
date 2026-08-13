@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 
 class ArsipController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:admin|operator|kabid')->only(['index']);
+    }
     public function index(Request $request)
     {
         $sortField = $request->input('sort', 'disetujui_pada');
@@ -31,11 +35,9 @@ class ArsipController extends Controller
             $program->activities->each(function ($activity) {
 
                 $activity->total_pagu = $activity->subActivities->sum('pagu_anggaran');
-
             });
 
             $program->total_pagu = $program->activities->sum('total_pagu');
-
         });
 
         if ($sortField === 'total_pagu') {
